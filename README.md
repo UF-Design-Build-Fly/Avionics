@@ -1,2 +1,2 @@
 # Avionics
-Code which will run the avionics package
+Code and hardware which will run the avionics package
