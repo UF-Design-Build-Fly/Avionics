@@ -49,7 +49,13 @@ bool go = 0; //Used in the "wait" while loop
 int buttonState = 0; //When button is pressed buttonState = 1, when button is not pressed buttonState = 0
 long startTime = 0;
 long Time = 0;
-double voltage = 0;
+double battery_voltage = 0;
+
+//Used to calculate temperature inside aricraft.
+int Vo;
+float R1 = 10000;
+float logR2, R2, T;
+float c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
 
 MPU6050 mpu;
 #define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
@@ -95,13 +101,16 @@ void dmpDataReady() {
 void setup() {
 
   Wire.begin(); //join I2C bus
+  Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
+  Wire.setWireTimeout(3000, true); //timeout value in uSec
+  
   Serial.begin(9600); //Debugging purposes.
   pinMode(RED_LED, OUTPUT);
   pinMode(YELLOW_LED, OUTPUT);
   pinMode(GREEN_LED, OUTPUT);
   pinMode(buttonPin, INPUT);
-  pinMode(pinCS, OUTPUT);
   pinMode(A0, INPUT); //Used to measure cell voltage
+  pinMode(pinCS, OUTPUT);
   digitalWrite(pinCS, HIGH);
 
 //  SD Card initialization
@@ -119,7 +128,7 @@ void setup() {
 //  Create/Open file
   myFile = SD.open("ypr.txt", FILE_WRITE);
   if (myFile) {
-    myFile.println("yaw,pitch,roll,voltage,time");
+    myFile.println("yaw,pitch,roll,voltage,temperature,time");
     myFile.close();
     Serial.println("ypr.txt was successfully opened and closed");
   }
@@ -238,11 +247,20 @@ void loop() {
   yaw = ypr[0] * 180 / M_PI;
   pitch = ypr[1] * 180 / M_PI;
   roll = ypr[2] * 180 / M_PI;
-  voltage = (analogRead(A0) + 1)/204.8;
+  battery_voltage = (analogRead(A0) + 1)/204.8;
   //The raw data from pin A0 represents the voltage level between 0V-5V, however the data
   //currently lies on the linear range 0-1023 (1024 points). To interpret the voltage from the raw 
   //data values, we need to add 1 to shift its values to be between 1-1024, and then divide it by 204.8. 
   //This will give a voltage value between 0.00 V and 5.00 V.
+
+  //The 6 lines of code below are sourced from: https://www.circuitbasics.com/arduino-thermistor-temperature-sensor-tutorial/
+  //A 10k thermistor and a 10k resistor are used here.
+  Vo = analogRead(A1); //A1 is the pin reading the raw voltage values. It is measuring the voltage across the 10k resistor.
+  R2 = R1 * (1023.0 / (float)Vo - 1.0); //Magical math
+  logR2 = log(R2);
+  T = (1.0 / (c1 + c2*logR2 + c3*logR2*logR2*logR2)); //Temp in kelvin
+  T = T - 273.15; //Degrees Celcius
+  T = (T * 9.0)/ 5.0 + 32.0; //Degrees Fahrenheit
   
   //Comma Separated Format
   Serial.print(yaw); //Shown in degrees
@@ -251,7 +269,9 @@ void loop() {
   Serial.print(",");
   Serial.print(roll);
   Serial.print(",");
-  Serial.print(voltage); //Shown in Volts (V)
+  Serial.print(battery_voltage); //Shown in Volts (V)
+  Serial.print(",");
+  Serial.print(T); //Shown in degrees Fahrenheit (F)
   Serial.print(",");
   Serial.print(Time); //Shown in milliseconds (ms)
   Serial.println();
@@ -268,7 +288,9 @@ void loop() {
     myFile.print(",");
     myFile.print(roll);
     myFile.print(",");
-    myFile.print(voltage); //Shown in Volts (V)
+    myFile.print(battery_voltage); //Shown in Volts (V)
+    myFile.print(",");
+    myFile.print(T); //Shown in degrees Fahrenheit (F)
     myFile.print(",");
     myFile.print(Time); //Shown in milliseconds
     myFile.println();
