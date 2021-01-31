@@ -45,8 +45,8 @@ File myFile;
 const int pinCS = 10; //CS terminal is connected to pin 10
 const int buttonPin = 6; //Digital pin button is connected to
 double yaw, pitch, roll;
-bool go = 0; //Used in the "wait" while loop
-int buttonState = 0; //When button is pressed buttonState = 1, when button is not pressed buttonState = 0
+//bool go = 0; //Used in the "wait" while loop
+//int buttonState = 0; //When button is pressed buttonState = 1, when button is not pressed buttonState = 0
 long startTime = 0;
 long Time = 0;
 double battery_voltage = 0;
@@ -60,8 +60,7 @@ float c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
 MPU6050 mpu;
 #define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
 #define RED_LED 7 // (Arduino is 13 (Changed to 7), Teensy is 11, Teensy++ is 6)
-#define YELLOW_LED 8 //Standby LED
-#define GREEN_LED 9 //Ready to start LED
+#define GREEN_LED 9 //Ready to start LED/Standby LED
 bool blinkState = false;
 
 // MPU control/status vars
@@ -106,7 +105,6 @@ void setup() {
   
   Serial.begin(9600); //Debugging purposes.
   pinMode(RED_LED, OUTPUT);
-  pinMode(YELLOW_LED, OUTPUT);
   pinMode(GREEN_LED, OUTPUT);
   pinMode(buttonPin, INPUT);
   pinMode(A0, INPUT); //Used to measure cell voltage
@@ -119,8 +117,7 @@ void setup() {
   }
   else {
     Serial.println("SD card initalization failed");
-    digitalWrite(GREEN_LED, HIGH);
-    digitalWrite(YELLOW_LED, HIGH); //Error Code 111: "SD card initalization failed" (all LED's are turned on).
+    digitalWrite(GREEN_LED, HIGH);  //Error Code 11: "SD card initalization failed" (all LED's are turned on).  
     digitalWrite(RED_LED, HIGH);
     return;
   }
@@ -128,14 +125,13 @@ void setup() {
 //  Create/Open file
   myFile = SD.open("ypr.txt", FILE_WRITE);
   if (myFile) {
-    myFile.println("yaw,pitch,roll,voltage,temperature,time");
     myFile.close();
     Serial.println("ypr.txt was successfully opened and closed");
   }
   else {
     Serial.println("Error opening ypr.txt");
-    digitalWrite(GREEN_LED, HIGH);
-    digitalWrite(RED_LED, HIGH); //Error code 101: "Error opening ypr.txt" (green and red LED's are turned on).
+    digitalWrite(RED_LED, HIGH); //Error code 10: "Error opening ypr.txt" (green and red LED's are turned on).
+    return;
   }
 
   while (!Serial); // wait for Leonardo enumeration, others continue immediately
@@ -156,7 +152,10 @@ void setup() {
   Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
   Serial.println(F("\nPress button to begin DMP programming and demo: "));
   digitalWrite(GREEN_LED, HIGH); //Green light illuminates to show it is ready to start
-  
+
+  /* This was commented out becaus once the safety pin is plugged into the plane, the delay to start collecting data will start.
+     The button is not needed for flights. Only If considered desired in testing.
+     
   //"Wait": Button needs to be pushed in order to proceed
   while (go < 1) {
     buttonState = digitalRead(buttonPin);
@@ -165,10 +164,20 @@ void setup() {
     }
     delay(100);
     }
-
+  */
+  
   //Moves to standby status
   digitalWrite(GREEN_LED, LOW);
-  digitalWrite(YELLOW_LED, HIGH);
+  digitalWrite(RED_LED, HIGH);
+
+  myFile = SD.open("ypr.txt", FILE_WRITE);
+  if (myFile) {
+    myFile.println("yaw,pitch,roll,voltage,temperature,time"); //Writes heading to file.
+    myFile.close();
+  }
+  else {
+    Serial.println("Error opening ypr.txt");
+  }
   
   // load and configure the DMP
   Serial.println(F("Initializing DMP..."));
@@ -215,10 +224,10 @@ void setup() {
     Serial.println(F(")"));
   }
 
-  //delay(10000); //Desired amount of time to wait before data is collected;
-  digitalWrite(YELLOW_LED, LOW);
+  delay(60000); //Desired amount of time to wait before data is collected. In this case, a 1 minute delay.
+  digitalWrite(RED_LED, LOW);
   
-  Serial.print("Data organized by yaw, pitch, roll, milliseconds (y,p,r,t).");
+  Serial.print("Data organized by yaw, pitch, roll, voltage, temperature ,milliseconds (y,p,r,t).");
   Serial.println();
 }
 
@@ -304,6 +313,8 @@ void loop() {
   blinkState = !blinkState;
   digitalWrite(RED_LED, blinkState);
   }
+
+  /* Button not needed during flights
   buttonState = digitalRead(buttonPin);
   if (buttonState == 1) {
     myFile = SD.open("ypr.txt", FILE_WRITE);
@@ -317,8 +328,10 @@ void loop() {
     Serial.println("End of Data");
     digitalWrite(GREEN_LED, HIGH);
     digitalWrite(RED_LED, LOW);
-    while(1);
+    return;
   } 
+  */
+  
 }
 
 //Future additions
