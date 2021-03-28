@@ -36,7 +36,7 @@ void loop() {
 
     double roll = atan2(2 * (quatReal * quatI + quatJ * quatK), 1 - 2*(quatI * quatI + JJ));
     double pitch = -asin(2 * quatReal * quatJ - quatI * quatK);
-    double yaw = atan2(2 * (quatReal * quatK + quatI * quatJ), 1 - 2*(JJ+quatK * quatK));
+    double yaw = -atan2(2 * (quatReal * quatK + quatI * quatJ), 1 - 2*(JJ+quatK * quatK));
     float rollDeg  = 57.2958 * roll;
     float pitchDeg = 57.2958 * pitch;
     float yawDeg   = 57.2958 * yaw;
