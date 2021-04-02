@@ -7,6 +7,7 @@ ATSAMD51 [MicroMod SAMD51 Processor](https://www.sparkfun.com/products/16791) SA
 
 ## Carrier Board
 SparkFun [MicroMod ATP Carrier Board](https://www.sparkfun.com/products/16885)
+[![MicroMod ATP Carrier Board](https://github.com/UF-Design-Build-Fly/Avionics/blob/main/Figures/Carrier_Board.PNG)](https://www.sparkfun.com/products/16885)
 
 ## The package will include readings for:
 - Temperature: [10k Thermistors](https://www.digikey.com/en/products/detail/MF52A2103J3470/317-1258-ND/1191033?itemSeq=352912458) and/ or [digital temperature sensors](https://www.adafruit.com/product/1782?gclid=Cj0KCQiAx9mABhD0ARIsAEfpavTrRpLu3mh6pQtUoUhwfdHJb2bvFCE8ZoAFT9-lS7LuWngm052WwCQaAsf0EALw_wcB)
