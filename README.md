@@ -3,6 +3,7 @@ Code and hardware which will run the avionics package.
 
 ## Microprocessor
 ATSAMD51 [MicroMod SAMD51 Processor](https://www.sparkfun.com/products/16791) SAM D ARM® Cortex®-M4 MCU 32-Bit Embedded Evaluation Board
+[![SparkFun MicroMod SAMD51 Processor (DEV-16791)](https://cdn.sparkfun.com/assets/parts/1/5/6/9/8/16791-SparkFun_MicroMod_SAMD51_Processor-01a.jpg)](https://www.sparkfun.com/products/16791)
 
 ## Carrier Board
 SparkFun [MicroMod ATP Carrier Board](https://www.sparkfun.com/products/16885)
