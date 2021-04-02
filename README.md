@@ -20,8 +20,3 @@ SparkFun [MicroMod ATP Carrier Board](https://www.sparkfun.com/products/16885)
 - [Airspeed sensor](https://www.racedayquads.com/products/matek-analog-airspeed-sensor-aspd-4525?currency=USD&gclid=Cj0KCQiAyp7yBRCwARIsABfQsnS2yW_IQ5EsHOuLm1RxqYPqBrf-bKbCy7pdZkK-Nq9PGUy9E7IiIWsaAsmwEALw_wcB&variant=30112599146609)
 - Inputs from the receiver (pwm): 5 interrupt pins
 - [Data logging](https://www.digikey.com/en/products/detail/BOB-00544/1568-1345-ND/5824094?itemSeq=352913504) and an [8 GB micro SD card]()
-
-## View the product list
-[Digitkey](https://www.digikey.com/ordering/shoppingcart)
-
-[Sparkfun](https://www.sparkfun.com/wish_lists/162935)
