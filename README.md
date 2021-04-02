@@ -1,5 +1,5 @@
 # Avionics
-  The Avionivs package is the code and hardware that is responsible for gathering and logging data from various sensors for the purpose of monitoring the performance/behavior of the aircraft. It will also execute any required tasks depending on the mission (e.g. driving servos to open/close doors for sensor package deployment). The Arduino IDE along with several libraries that are listed below are used to develop code. All of the libraries can be directly downloaded from the * *Manage Libraries...* * option under * *tools* * in the IDE.
+  The Avionivs package is the code and hardware that is responsible for gathering and logging data from various sensors for the purpose of monitoring the performance/behavior of the aircraft. It will also execute any required tasks depending on the mission (e.g. driving servos to open/close doors for sensor package deployment). The Arduino IDE along with several libraries that are listed below are used to develop code. All of the libraries can be directly downloaded from the *Manage Libraries...* option under *tools* in the IDE.
 
 - [Servo](https://www.arduino.cc/reference/en/libraries/servo/)
 - [Wire](https://www.arduino.cc/en/reference/wire)
