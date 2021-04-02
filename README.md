@@ -1,5 +1,10 @@
 # Avionics
-Code and hardware which will run the avionics package.
+Code and hardware that runs the avionics package. The Arduino IDE along with several libraries that are listed below are used to develop code. All of the libraries can be directly downloaded from the "Manage Libraries..." option under "tools" in the IDE.
+
+- [Servo](https://www.arduino.cc/reference/en/libraries/servo/)
+- [Wire](https://www.arduino.cc/en/reference/wire)
+- [SparkFun_BNO080_Arduino_Library](https://github.com/sparkfun/SparkFun_BNO080_Arduino_Library)
+
 
 ## Microprocessor
 ATSAMD51 [MicroMod SAMD51 Processor](https://www.sparkfun.com/products/16791) SAM D ARM® Cortex®-M4 MCU 32-Bit Embedded Evaluation Board
