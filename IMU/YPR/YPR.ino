@@ -1,4 +1,5 @@
 //Obtains Yaw, Pitch, and Rolls Angles in degrees.
+//There are problems with returning incorrect values for angles when pitch is pointed all the way up and then rotated on yaw axis.
 #include <Wire.h>
 
 #include "SparkFun_BNO080_Arduino_Library.h" // Click here to get the library: http://librarymanager/All#SparkFun_BNO080
