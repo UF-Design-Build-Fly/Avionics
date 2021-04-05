@@ -5,10 +5,10 @@
 Pinout on NANO
 Connect the 5V pin to the 5V pin on the Arduino
 Connect the GND pin to the GND pin on the Arduino
-Connect CLK to pin 13 or 52
+Connect CLK to pin 13 
 Connect DO(MISO) to pin 12 
-Connect DI(MOSI) to pin 11 or 51
-Connect CS to pin 10 or 53
+Connect DI(MOSI) to pin 11 
+Connect CS to pin 10
 */
 
 /*
@@ -50,7 +50,6 @@ void setup() {
    
     return;
   }
-  
 }
 
 void loop() {
