@@ -1,4 +1,4 @@
-## What needs to be done?
+What needs to be done?
 - 1 switch (3 positions) controls the distance the winch/sensor is released: Release, Stop, and Retract
 - Hall sensor counts revolutions (After a certain # the air brakes and lights condition on sensor become true/on)
 - Bomb Bay opens automatically and closes only after a certain number of revolutions (sensor payload is clear of aircraft). We want to optimize the door being open for the least amount of time.
