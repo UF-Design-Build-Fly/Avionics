@@ -6,3 +6,4 @@
 - Bomb bay door closes after sensor is reeled in completely.
 - Signal controlling sensor payload technically handles one condition, ON/OFF. If ON, lights and air brakes are true. Else, lights and air bakes are false.
 - May have to use interrupts in software to give person flying aircraft immediate control when flipping switch if stuck in a loop (depends on how fast code is executed).
+- Sensors? Data logging? (not priority)
