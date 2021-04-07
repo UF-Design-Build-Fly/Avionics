@@ -5,7 +5,7 @@
 - [Servo](https://www.arduino.cc/reference/en/libraries/servo/)
 - [Wire](https://www.arduino.cc/en/reference/wire)
 - [SparkFun_BNO080_Arduino_Library](https://github.com/sparkfun/SparkFun_BNO080_Arduino_Library)
-- (More to be listed)
+- (More to be listed  e.g. SPI, SD, other sensors)
 
 
 ## Microprocessor
