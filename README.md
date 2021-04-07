@@ -1,10 +1,11 @@
 # Avionics
-  The Avionivs package is the code and hardware that is responsible for gathering and logging data from various sensors for the purpose of monitoring the performance/behavior of the aircraft. It will also execute any required tasks depending on the mission (e.g. driving servos to open/close doors for sensor payload deployment). The Arduino IDE along with several libraries that are listed below are used to develop code. All of the libraries can be directly downloaded from the *Manage Libraries...* option under *tools* in the IDE.
+  The Avionivs package is the code and hardware that is responsible for gathering and logging data from various sensors for the purpose of monitoring the performance/behavior of the aircraft. It will also execute any required tasks depending on the mission (e.g. driving servos to open/close doors for sensor payload deployment). The Arduino IDE along with several libraries (shown below) are used to develop code. All of the libraries can be directly downloaded from the *Manage Libraries...* option under *tools* in the IDE.
 
+### Libraries
 - [Servo](https://www.arduino.cc/reference/en/libraries/servo/)
 - [Wire](https://www.arduino.cc/en/reference/wire)
 - [SparkFun_BNO080_Arduino_Library](https://github.com/sparkfun/SparkFun_BNO080_Arduino_Library)
-- (More to be listed)
+- (More to be listed  e.g. SPI, SD, other sensors)
 
 
 ## Microprocessor
@@ -27,3 +28,4 @@ SparkFun [MicroMod ATP Carrier Board](https://www.sparkfun.com/products/16885)
 - Inputs from the receiver (pwm)
 - [Data logging](https://www.digikey.com/en/products/detail/BOB-00544/1568-1345-ND/5824094?itemSeq=352913504) and an [8 GB micro SD card]()
 - Hall Sensor [Latching](https://www.sparkfun.com/products/9312)/[Non-Latching](https://www.sparkfun.com/products/14709)
+- Pressure Sensor
