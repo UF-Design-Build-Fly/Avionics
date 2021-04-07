@@ -28,3 +28,4 @@ SparkFun [MicroMod ATP Carrier Board](https://www.sparkfun.com/products/16885)
 - Inputs from the receiver (pwm)
 - [Data logging](https://www.digikey.com/en/products/detail/BOB-00544/1568-1345-ND/5824094?itemSeq=352913504) and an [8 GB micro SD card]()
 - Hall Sensor [Latching](https://www.sparkfun.com/products/9312)/[Non-Latching](https://www.sparkfun.com/products/14709)
+- Pressure Sensor
