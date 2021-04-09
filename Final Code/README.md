@@ -10,18 +10,18 @@
 
 ### Notes
 CH6 (light)
-  dual switch 
-	990 ish for down (lights off)
-	2011 for up (lights on)
+  - dual switch 
+	- 990 ish for down (lights off)
+	- 2011 for up (lights on)
 CH7 (stop, retract, retreive)
-  tri state switch
-	UP: 990 (release)
-	Middle: 1500 (stop)
-	Down: 2012 (retrieve)	
+  - tri state switch
+	- UP: 990 (release)
+	- Middle: 1500 (stop)
+	- Down: 2012 (retrieve)	
 CH8 (doors)
-  tri-state switch
-	Up: 990 (open)
-	Middle: 1500 (closed)
-	Down: 2012 (closed)
+- tri-state switch
+- 	Up: 990 (open)
+- 	Middle: 1500 (closed)
+- 	Down: 2012 (closed)
 
 
