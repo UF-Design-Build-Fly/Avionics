@@ -7,7 +7,7 @@
 #define door_signal G4
 
 /*
-CH6 (light)
+CH6 (light) 
   990 ish for down (dual switch) 
   2011 for up
 CH7 (stop, retract, retreive)
@@ -29,19 +29,16 @@ In testing:
 180 sends ~ 2.4 ms signal (HI)
 */
 
-byte lights_off = 0;
-byte lights_on = 180;
-
-byte winch_release_speed = 90; //Real value either 45 or 135. Need to determine which signals would retrieve and release.
-byte winch_retrieve_speed = 90; //Real value either 45 or 135. Also need to determine how fast the servos need to retrieve/release
+byte winch_release_speed = 45; //Real value either 45 or 135. Need to determine which signals would retrieve and release.
+byte winch_retrieve_speed = 135; //Real value either 45 or 135. Also need to determine how fast the servos need to retrieve/release
 byte winch_stop = 90;
 
-byte door_closed = 0; //??
-byte door_open = 0; //?
+byte door_closed = 0; //75 was good enough 
+byte door_open = 180; //good enough
 
 float chan6sig, chan7sig, chan8sig = 0;
 
-Servo lights;
+#define LEDpin D0
 Servo winch;
 Servo door;
 
@@ -49,10 +46,10 @@ void setup() {
   pinMode(read_Channel_6, INPUT); //Signal sent down tow rope to toggle lights
   pinMode(read_Channel_7, INPUT); //Signal to toggle winch (Back, Stop, Forward)
   pinMode(read_Channel_8, INPUT); //Signal to toggle doors
-  lights.attach(lights_signal);
+  pinMode(LEDpin, OUTPUT);
   winch.attach(winch_signal);
   door.attach(door_signal);
-  lights.write(lights_off);
+  digitalWrite(LEDpin, LOW);
   winch.write(winch_stop);
   door.write(door_closed);
 }
@@ -68,10 +65,10 @@ void loop() {
 
 void gators (float duration) {
   if (duration > 1900) {
-    lights.write(lights_on);
+    digitalWrite(LEDpin, HIGH); //Turns LEDs on
   }
   else {
-    lights.write(lights_off);
+    digitalWrite(LEDpin, LOW); //Turns/keeps LEDs off
   }
 }
 
