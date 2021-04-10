@@ -7,3 +7,23 @@
 - Signal controlling sensor payload technically handles one condition, ON/OFF. If ON, lights and air brakes are true. Else, lights and air bakes are false.
 - May have to use interrupts in software to give person flying aircraft immediate control when flipping switch if stuck in a loop (depends on how fast code is executed).
 - Sensors? Data logging? (not priority)
+
+### Notes
+CH6 (light)
+  - dual switch 
+	- 990 ish for down (lights off)
+	- 2011 for up (lights on)
+
+CH7 (stop, retract, retreive)
+  - tri state switch
+	- UP: 990 (release)
+	- Middle: 1500 (stop)
+	- Down: 2012 (retrieve)	
+
+CH8 (doors)
+ - tri-state switch
+	- Up: 990 (open)
+ 	- Middle: 1500 (closed)
+ 	- Down: 2012 (closed)
+
+
