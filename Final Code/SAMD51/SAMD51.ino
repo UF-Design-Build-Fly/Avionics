@@ -2,7 +2,7 @@
 #include <SD.h>
 #include <SPI.h>
 #include <Servo.h>
-#include "SparkFun_BNO080_Arduino_Library.h" // Click here to get the library: http://librarymanager/All#SparkFun_BNO080
+#include <SparkFun_BNO080_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_BNO080
 #include <SparkFun_LPS25HB_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_LPS25HB
 #include <SparkFun_u-blox_GNSS_Arduino_Library.h> //http://librarymanager/All#SparkFun_u-blox_GNSS
 
