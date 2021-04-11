@@ -4,8 +4,11 @@
 ### Libraries
 - [Servo](https://www.arduino.cc/reference/en/libraries/servo/)
 - [Wire](https://www.arduino.cc/en/reference/wire)
+- [SD](https://www.arduino.cc/en/reference/SD)
+- [SPI](https://www.arduino.cc/en/reference/SPI)
 - [SparkFun_BNO080_Arduino_Library](https://github.com/sparkfun/SparkFun_BNO080_Arduino_Library)
-- (More to be listed  e.g. SPI, SD, other sensors)
+- [SparkFun LPS25HB Arduino Library](https://github.com/sparkfun/SparkFun_LPS25HB_Arduino_Library)
+- [SparkFun_u-blox_GNSS_Arduino_Library](https://github.com/sparkfun/SparkFun_u-blox_GNSS_Arduino_Library)
 
 
 ## Microprocessor
