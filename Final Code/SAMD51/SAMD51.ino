@@ -125,10 +125,6 @@ void IMU() {
       IMU_File.println(millis());
       IMU_File.close();
     }
-    else {
-      Serial.println("Error opening IMU.txt");
-      return;
-    }
     Serial.println("IMU");
   }
 }
@@ -163,10 +159,6 @@ void PWM() {
     PWM_File.print(",");
     PWM_File.println(millis());
     PWM_File.close();
-  }
-  else {
-    Serial.println("Error opening IMU.txt");
-    return;
   }
   Serial.println("PWM");
 }
@@ -307,7 +299,9 @@ Connect CS to D1
     Serial.println("IMU.txt was successfully opened and closed");
   }
   else {
-   // Serial.println("Error opening IMU.txt");
+   digitalWrite(yellowLED, HIGH); //Error Code 111
+   digitalWrite(greenLED, HIGH);
+   Serial.println("Error opening IMU.txt");
     return;
   }
 
@@ -318,6 +312,8 @@ Connect CS to D1
     Serial.println("Pressure.txt was successfully opened and closed");
   }
   else {
+    digitalWrite(yellowLED, HIGH); //Error Code 111
+    digitalWrite(greenLED, HIGH);
     Serial.println("Error opening Pressure.txt");
     return;
   }
@@ -329,6 +325,8 @@ Connect CS to D1
     Serial.println("AdaTemp.txt was successfully opened and closed");
   }
   else {
+    digitalWrite(yellowLED, HIGH); //Error Code 111
+    digitalWrite(greenLED, HIGH);
     Serial.println("Error opening AdaTemp.txt");
     return;
   }
@@ -340,6 +338,8 @@ Connect CS to D1
     Serial.println("GPS.txt was successfully opened and closed");
   }
   else {
+    digitalWrite(yellowLED, HIGH); //Error Code 111
+    digitalWrite(greenLED, HIGH);
     Serial.println("Error opening GPS.txt");
     return;
   }
@@ -351,6 +351,8 @@ Connect CS to D1
     Serial.println("PWM.txt was successfully opened and closed");
   }
   else {
+    digitalWrite(yellowLED, HIGH); //Error Code 111
+    digitalWrite(greenLED, HIGH);
     Serial.println("Error opening PWM.txt");
     return;
   }
@@ -398,7 +400,7 @@ void initialize_Sensors () {
 
   if (pressureSensor.isConnected() == false) // The library supports some different error codes such as "DISCONNECTED"
   {
-    digitalWrite(greenLED, HIGH); //Error Code 101
+    digitalWrite(yellowLED, HIGH);
     Serial.println("LPS25HB disconnected. Reset the board to try again.");     // Alert the user that the device cannot be reached
     Serial.println("Are you using the right Wire port and I2C address?");      // Suggest possible fixes
     Serial.println("See Example2_I2C_Configuration for how to change these."); // Suggest possible fixes
@@ -410,6 +412,7 @@ void initialize_Sensors () {
   }
 
   if (!tempsensor.begin(0x18)) {
+    digitalWrite(yellowLED, HIGH);
     Serial.println("Couldn't find MCP9808! Check your connections and verify the address is correct.");
     while (1);
   }
@@ -426,8 +429,6 @@ void initialize_Sensors () {
  
   if (myGNSS.begin() == false) //Connect to the u-blox module using Wire port
   {
-    digitalWrite(redLED, LOW);
-    digitalWrite(greenLED, HIGH); //Error Code 011
     digitalWrite(yellowLED, HIGH);
     Serial.println(F("u-blox GNSS not detected at default I2C address. Please check wiring. Freezing."));
     while (1);
