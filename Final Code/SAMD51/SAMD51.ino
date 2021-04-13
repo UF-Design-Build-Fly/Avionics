@@ -4,6 +4,7 @@
 #include <Servo.h>
 #include <SparkFun_BNO080_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_BNO080
 #include <SparkFun_LPS25HB_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_LPS25HB
+#include <Adafruit_MCP9808.h>
 #include <SparkFun_u-blox_GNSS_Arduino_Library.h> //http://librarymanager/All#SparkFun_u-blox_GNSS
 
 #define read_Channel_1 G0
@@ -15,36 +16,41 @@
 #define read_Channel_8 G6
 
 #define LEDpin D0
-#define winch_signal 63 //63 is G10
+#define winch_signal G11//63 on ATP, 43 or 38 on SAMD is G10
 #define door_signal G9
 
 #define greenLED G7
 #define yellowLED G8
-#define redLED G11
+#define redLED D1
 
 byte winch_release_speed = 45; //Real value either 45 or 135. Need to determine which signals would retrieve and release.
 byte winch_retrieve_speed = 135; //Real value either 45 or 135. Also need to determine how fast the servos need to retrieve/release.
 byte winch_stop = 90;
 
-byte door_closed = 0; //75 was good enough 
-byte door_open = 180; //good enough
+byte door_closed = 40; //0 = 543us 45 = 1ms
+byte door_open = 140; //180 = 2.4ms, 135 = 1.935
 
 float chan1sig, chan2sig, chan3sig, chan4sig, chan6sig, chan7sig, chan8sig = 0;
 
 Servo winch;
 Servo door;
 SFE_UBLOX_GNSS myGNSS;
-LPS25HB pressureSensor; // Create an object of the LPS25HB class
+LPS25HB pressureSensor;
 BNO080 myIMU;
+Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
 
 File IMU_File;
 File Pressure_File;
+File Ada_File;
 File GPS_File;
 File PWM_File;
 
 int IMU_update = 50; //50 ms update;
+long time_taken_to_initialize = 0;
 long GPS_lastTime = 0;
+long ada_lastTime = 0;
 long wait_time = 60000; //Wait 1 minute before taking readings from sensors
+int transmitter_state = 0;
 
 void setup() {
   //Serial.begin(9600);
@@ -59,6 +65,7 @@ void loop() {
   IMU();
   PWM();
   pressure_and_temp();
+  ada_Temperature();
   GPS();
 }
 
@@ -122,6 +129,7 @@ void IMU() {
       Serial.println("Error opening IMU.txt");
       return;
     }
+    Serial.println("IMU");
   }
 }
 
@@ -156,6 +164,11 @@ void PWM() {
     PWM_File.println(millis());
     PWM_File.close();
   }
+  else {
+    Serial.println("Error opening IMU.txt");
+    return;
+  }
+  Serial.println("PWM");
 }
 
 void pressure_and_temp () {
@@ -171,6 +184,29 @@ void pressure_and_temp () {
     Pressure_File.print(",");
     Pressure_File.println(millis());
     Pressure_File.close();
+  }
+  Serial.println("Pressure");
+}
+
+void ada_Temperature () {
+  if (millis() - ada_lastTime > 500)
+  {
+    ada_lastTime = millis(); //Update the timer
+    tempsensor.wake();
+    float c = tempsensor.readTempC();
+    float f = tempsensor.readTempF();
+    tempsensor.shutdown_wake(1);
+    
+    Ada_File = SD.open("AdaTemp.txt", FILE_WRITE);
+    if (Ada_File) {
+      Ada_File.print(c, 4);
+      Ada_File.print(",");
+      Ada_File.print(f, 4);
+      Ada_File.print(",");
+      Ada_File.println(millis());
+      Ada_File.close();
+    }
+    Serial.println("AdaTemp");
   }
 }
 
@@ -206,6 +242,7 @@ void GPS()
       GPS_File.println(millis());
       GPS_File.close();
     }
+    Serial.println("GPS");
   }
 }
 
@@ -249,11 +286,11 @@ Connect DO to CIPO
 Connect DI to COPI
 Connect CS to D1
 */
-  pinMode(D1, OUTPUT); //D1 is used as chip select
-  digitalWrite(D1, HIGH); //avoids chip select contention
+  pinMode(CS, OUTPUT); //D1 is used as chip select
+  digitalWrite(CS, HIGH); //avoids chip select contention
 
 //  SD Card initialization
-  if (SD.begin(D1)) { //if initialization was successful...
+  if (SD.begin(CS)) { //if initialization was successful...
      Serial.println("SD card is ready to use.");   
   }
   else {
@@ -285,6 +322,17 @@ Connect CS to D1
     return;
   }
 
+  Ada_File = SD.open("AdaTemp.txt", FILE_WRITE);
+  if (Ada_File) {
+    Ada_File.println("C, F");
+    Ada_File.close();
+    Serial.println("AdaTemp.txt was successfully opened and closed");
+  }
+  else {
+    Serial.println("Error opening AdaTemp.txt");
+    return;
+  }
+
   GPS_File = SD.open("GPS.txt", FILE_WRITE);
   if (GPS_File) {
     GPS_File.println(" (degrees * 10^-7), (degrees * 10^-7), (mm), (mm/s), (degrees * 10^-5), SIV, time");
@@ -292,7 +340,7 @@ Connect CS to D1
     Serial.println("GPS.txt was successfully opened and closed");
   }
   else {
-    //Serial.println("Error opening GPS.txt");
+    Serial.println("Error opening GPS.txt");
     return;
   }
 
@@ -334,6 +382,7 @@ void initialize_Pins_and_Servos () {
 
 void initialize_Sensors () {
   Wire.begin();
+  Serial.println("Wire begin");
 
   if (myIMU.begin() == false)
   {
@@ -341,43 +390,101 @@ void initialize_Sensors () {
     Serial.println("BNO080 not detected at default I2C address. Check your jumpers and the hookup guide. Freezing...");
     while (1);
   }
+  else {
+    Serial.println("IMU is good");
+  }
 
   pressureSensor.begin(); // Begin links an I2C port and I2C address to the sensor, sets an I2C speed, begins I2C on the main board, and then sets default settings
 
   if (pressureSensor.isConnected() == false) // The library supports some different error codes such as "DISCONNECTED"
   {
-    digitalWrite(greenLED, HIGH);
+    digitalWrite(greenLED, HIGH); //Error Code 101
     Serial.println("LPS25HB disconnected. Reset the board to try again.");     // Alert the user that the device cannot be reached
     Serial.println("Are you using the right Wire port and I2C address?");      // Suggest possible fixes
     Serial.println("See Example2_I2C_Configuration for how to change these."); // Suggest possible fixes
     Serial.println("");
     while (1);
   }
+  else {
+    Serial.println("Pressure Sensor is good");
+  }
 
+  if (!tempsensor.begin(0x18)) {
+    Serial.println("Couldn't find MCP9808! Check your connections and verify the address is correct.");
+    while (1);
+  }
+  else {
+    Serial.println("AdaFruit Temperature Sensor is good");
+  }
+
+  tempsensor.setResolution(3); // sets the resolution mode of reading, the modes are defined in the table bellow:
+  // Mode Resolution SampleTime
+  //  0    0.5°C       30 ms
+  //  1    0.25°C      65 ms
+  //  2    0.125°C     130 ms
+  //  3    0.0625°C    250 ms
+ 
   if (myGNSS.begin() == false) //Connect to the u-blox module using Wire port
   {
     digitalWrite(redLED, LOW);
-    digitalWrite(greenLED, HIGH);
+    digitalWrite(greenLED, HIGH); //Error Code 011
     digitalWrite(yellowLED, HIGH);
     Serial.println(F("u-blox GNSS not detected at default I2C address. Please check wiring. Freezing."));
     while (1);
+  }
+  else {
+    Serial.print("GPS is good");
   }
 
   myGNSS.setI2COutput(COM_TYPE_UBX); //Set the I2C port to output UBX only (turn off NMEA noise)
   myGNSS.saveConfigSelective(VAL_CFG_SUBSEC_IOPORT); //Save (only) the communications port settings to flash and BBR
 
   Wire.setClock(400000); //Increase I2C data rate to 400kHz
+  Serial.println("Wire clock set");
 
   myIMU.enableRotationVector(IMU_update);
 }
 
 void WAIT () {
   Serial.println("EVERYTHING INITIALIZED");
+
+  while(transmitter_state == 0) {
+    chan6sig = pulseIn(read_Channel_6, HIGH);
+    chan7sig = pulseIn(read_Channel_7, HIGH);
+    chan8sig = pulseIn(read_Channel_8, HIGH);
+
+    Serial.print(chan6sig);
+    Serial.print(",");
+    Serial.print(chan7sig);
+    Serial.print(",");
+    Serial.print(chan8sig);
+
+    if (chan6sig < 1900 && chan6sig > 100 && chan7sig < 1600 && chan7sig > 1400 && chan8sig > 1100) {
+      transmitter_state = 1; //Switches are now in our defined neutral position
+      Serial.print(",");
+      Serial.println(transmitter_state);
+    }
+    else {
+      Serial.print(",");
+      Serial.println(transmitter_state);
+    }
+  }
+  
   digitalWrite(redLED, LOW);
   digitalWrite(yellowLED, HIGH);
   
-  delay(wait_time);
+  time_taken_to_initialize = millis();
 
+  while (millis() - time_taken_to_initialize < wait_time){
+    chan6sig = pulseIn(read_Channel_6, HIGH);
+    chan7sig = pulseIn(read_Channel_7, HIGH);
+    chan8sig = pulseIn(read_Channel_8, HIGH);
+    gators(chan6sig);
+    bassProShop(chan7sig);
+    B52(chan8sig);
+    Serial.println("Waiting");
+  }
+  
   digitalWrite(yellowLED, LOW);
   digitalWrite(greenLED, HIGH);
 }
