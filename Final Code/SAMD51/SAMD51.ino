@@ -23,9 +23,9 @@
 #define yellowLED G8
 #define redLED D1
 
-byte winch_release_speed = 45; //Real value either 45 or 135. Need to determine which signals would retrieve and release.
-byte winch_retrieve_speed = 135; //Real value either 45 or 135. Also need to determine how fast the servos need to retrieve/release.
-byte winch_stop = 90;
+byte winch_release_speed = 60; //Real value either 45 or 135. Need to determine which signals would retrieve and release.
+byte winch_retrieve_speed = 115; //Real value either 45 or 135. Also need to determine how fast the servos need to retrieve/release.
+byte winch_stop = 93;
 
 byte door_closed = 40; //0 = 543us 45 = 1ms
 byte door_open = 140; //180 = 2.4ms, 135 = 1.935
